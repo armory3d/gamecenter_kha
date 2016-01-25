@@ -2,6 +2,8 @@
 
 #include <GameCenterKore.h>
 #import <GameKit/GameKit.h>
+#import <gpg/GooglePlayGames.h>
+#import "Kore/KoreAppDelegate.h"
 
 typedef void (*FunctionType)();
 
@@ -20,19 +22,16 @@ typedef void (*FunctionType)();
 
 @synthesize onGameCenterFinished;
 
-- (id)init 
-{
+- (id)init {
     self = [super init];
     return self;
 }
 
-- (void)dealloc 
-{
+- (void)dealloc {
     //[super dealloc];
 }
 
-- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController*)viewController
-{
+- (void)gameCenterViewControllerDidFinish:(GKGameCenterViewController*)viewController {
 	[viewController dismissViewControllerAnimated:YES completion:^{
 		[viewController.view.superview removeFromSuperview];
 		//[viewController release];
@@ -48,21 +47,20 @@ namespace GameCenterKore {
 
 	GKViewDelegate* viewDelegate;
 
-	void gcAuthenticationChanged(CFNotificationCenterRef center, void* observer, CFStringRef name, const void* object, CFDictionaryRef userInfo)
-	{
+	void gcAuthenticationChanged(CFNotificationCenterRef center, void* observer, CFStringRef name, const void* object, CFDictionaryRef userInfo) {
 		//if(!isGameCenterAvailable())
 	    //{
 		//	return;
 		//}
 		
-		if([GKLocalPlayer localPlayer].isAuthenticated)
+		/*if([GKLocalPlayer localPlayer].isAuthenticated)
 	    {      
 			NSLog(@"Game Center: You are logged in to game center.");
 		}
 	    else
 	    {
 			NSLog(@"Game Center: You are NOT logged in to game center.");
-		}
+		}*/
 	}
 
 
@@ -93,8 +91,7 @@ namespace GameCenterKore {
 		return (gcClass && osVersionSupported);
 	}
 
-	void authenticateLocalUser() 
-	{
+	void authenticateLocalUser() {
 	    //if(!isGameCenterAvailable())
 	    //{
 		//	return;
@@ -111,19 +108,17 @@ namespace GameCenterKore {
 	        
 	        else
 	        {
-	        	NSLog(@"failed");
+	        	//NSLog(@"failed");
 				//sendGameCenterEvent("auth-failed", "");
 			}
 		}];
 	}
 
-	bool isUserAuthenticated()
-	{
+	bool isUserAuthenticated() {
 		return ([GKLocalPlayer localPlayer].isAuthenticated);
 	}
 
-	void registerForAuthenticationNotification()
-	{
+	void registerForAuthenticationNotification() {
 		CFNotificationCenterAddObserver
 		(
 	    	CFNotificationCenterGetLocalCenter(),
@@ -135,14 +130,12 @@ namespace GameCenterKore {
 	    );
 	}
 
-	void showLeaderboard(const char* leaderboardID)
-	{
+	void showLeaderboard(const char* leaderboardID) {
 		//NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 		NSString* strID = [[NSString alloc] initWithUTF8String:leaderboardID];
 
 		GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
-	    if (gameCenterController != nil)
-	    {
+	    if (gameCenterController != nil) {
 	        gameCenterController.gameCenterDelegate = viewDelegate;
 	        gameCenterController.viewState = GKGameCenterViewControllerStateLeaderboards;
 	        //gameCenterController.leaderboardTimeScope = GKLeaderboardTimeScopeToday;
@@ -157,12 +150,23 @@ namespace GameCenterKore {
 		//[pool drain];
 	}
 
+	void showAchievements() {
+		GKGameCenterViewController *gameCenterController = [[GKGameCenterViewController alloc] init];
+	    if (gameCenterController != nil) {
+	        gameCenterController.gameCenterDelegate = viewDelegate;
+	        gameCenterController.viewState = GKGameCenterViewControllerStateAchievements;
+
+	        UIWindow *window = [[[UIApplication sharedApplication] windows] objectAtIndex:0];
+	        [window addSubview:gcVC.view];
+	        [gcVC presentViewController:gameCenterController animated:YES completion:nil];
+	    }
+	}
+
 	void gameCenterViewDismissed() {
 	    [gcVC.view removeFromSuperview];
 	}
 
-	void reportScore(const char* leaderboardID, int score)
-	{
+	void reportScore(const char* leaderboardID, int score) {
 	    //NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
 		NSString* strID = [[NSString alloc] initWithUTF8String:leaderboardID];
 		//GKScore* scoreReporter = [[[GKScore alloc] initWithCategory:strID] autorelease];
@@ -176,14 +180,14 @@ namespace GameCenterKore {
 	        {   
 				if(error != nil)
 	            {
-					NSLog(@"Game Center: Error occurred reporting score-");
-					NSLog(@"  %@", [error userInfo]);
+					//NSLog(@"Game Center: Error occurred reporting score-");
+					//NSLog(@"  %@", [error userInfo]);
 					//sendGameCenterEvent("score-failed", categoryID);
 				}
 	            
 	            else
 	            {
-					NSLog(@"Game Center: Score was successfully sent");
+					//NSLog(@"Game Center: Score was successfully sent");
 					//sendGameCenterEvent("score-success", categoryID);
 				}
 			}];   
@@ -211,14 +215,14 @@ namespace GameCenterKore {
 	        {
 				if(error != nil)
 	            {
-					NSLog(@"Game Center: Error occurred reporting achievement-");
-					NSLog(@"  %@", [error userInfo]);
+					//NSLog(@"Game Center: Error occurred reporting achievement-");
+					//NSLog(@"  %@", [error userInfo]);
 					//sendGameCenterEvent("achieve-failed", achievementID);
 				}
 	            
 	            else
 	            {
-					NSLog(@"Game Center: Achievement report successfully sent");
+					//NSLog(@"Game Center: Achievement report successfully sent");
 					//sendGameCenterEvent("achieve-success", achievementID);
 				}
 	            
@@ -239,7 +243,7 @@ namespace GameCenterKore {
 	    [GKAchievement resetAchievementsWithCompletionHandler:^(NSError *error) {
 	        
 	        if(error != nil) {
-	            NSLog(@"  %@", [error userInfo]);
+	            //NSLog(@"  %@", [error userInfo]);
 	            //sendGameCenterEvent("achieve-reset-failed", "");
 	        }
 	        
@@ -247,5 +251,95 @@ namespace GameCenterKore {
 	            //sendGameCenterEvent("achieve-reset-success", "");
 	        }
 	    }];
+	}
+
+
+	// Realtime multiplayer
+	void startQuickGame() {
+		GPGMultiplayerConfig *config = [[GPGMultiplayerConfig alloc] init];
+	    // Could also include variants or exclusive bitmasks here
+	    config.minAutoMatchingPlayers = 1;//totalPlayers - 1;
+	    config.maxAutoMatchingPlayers = 1;//totalPlayers - 1;
+	    config.variant = 1;
+
+	    // Show waiting room UI
+	    [[GPGLauncherController sharedInstance] presentRealTimeWaitingRoomWithConfig:config];
+	}
+
+	void startInviteGame() {
+		[[GPGLauncherController sharedInstance] presentRealTimeInviteWithMinPlayers:2 maxPlayers:2];
+	}
+
+	void showInvitations() {
+
+	}
+
+	void signInWithClientID(const char* clientID, bool silent) {
+		NSString* nsID = [[NSString alloc] initWithUTF8String:clientID];
+
+		if (silent) {
+			[[GPGManager sharedInstance] signInWithClientID:nsID silently:YES];
+		}
+		else {
+			[[GPGManager sharedInstance] signInWithClientID:nsID silently:NO];
+		}
+	}
+
+	void signOut() {
+		[[GPGManager sharedInstance] signOut];
+	}
+
+	void sendReliableDataToOthers(int data) {
+		NSMutableData *gameMessage = [[NSMutableData alloc] init];
+		
+		// Turns out the Android version sends this as a byte.
+		Byte tinyData = (Byte)(data & 0xFF);
+		[gameMessage appendBytes:&tinyData length:sizeof(Byte)];
+
+		KoreAppDelegate* appd = (KoreAppDelegate*)[[UIApplication sharedApplication]delegate];
+		GPGRealTimeRoom* roomToTrack = [appd getRoomToTrack];
+
+		[roomToTrack sendReliableDataToOthers:[gameMessage copy]];
+	}
+
+	int getReceivedData() {
+		KoreAppDelegate* appd = (KoreAppDelegate*)[[UIApplication sharedApplication]delegate];
+		int result = [appd getReceivedData];
+		return result;
+	}
+
+	bool getGameStarted() {
+		KoreAppDelegate* appd = (KoreAppDelegate*)[[UIApplication sharedApplication]delegate];
+		bool result = [appd getGameStarted];
+		return result;
+	}
+
+	const char* getLocalParticipantId() {
+		KoreAppDelegate* appd = (KoreAppDelegate*)[[UIApplication sharedApplication]delegate];
+		const char* result = [appd getLocalParticipantId];
+		return result;
+	}
+
+	const char* getOpponentParticipantId() {
+		KoreAppDelegate* appd = (KoreAppDelegate*)[[UIApplication sharedApplication]delegate];
+		const char* result = [appd getOpponentParticipantId];
+		return result;
+	}
+
+	void leaveRoom() {
+		KoreAppDelegate* appd = (KoreAppDelegate*)[[UIApplication sharedApplication]delegate];
+		GPGRealTimeRoom* roomToTrack = [appd getRoomToTrack];
+
+		[roomToTrack leave];
+	}
+
+	bool getGameDisconnected() {
+		return false;
+	}
+
+	bool getPlaySignedIn() {
+		KoreAppDelegate* appd = (KoreAppDelegate*)[[UIApplication sharedApplication]delegate];
+		bool result = [appd getPlaySignedIn];
+		return result;
 	}
 }

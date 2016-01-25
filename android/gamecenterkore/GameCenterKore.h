@@ -3,11 +3,6 @@
 namespace GameCenterKore {
 
 	int init();
-
-	bool isGameCenterAvailable();
-	void authenticateLocalUser();
-	bool isUserAuthenticated();
-	void registerForAuthenticationNotification();
 	
 	void showLeaderboard(const char* leaderboardID);
 	void showAchievements();
@@ -19,8 +14,6 @@ namespace GameCenterKore {
 	void startQuickGame();
 	void startInviteGame();
 	void showInvitations();
-	void signInWithClientID(const char* clientID, bool silent);
-	void signOut();
 	void sendReliableDataToOthers(int data);
 	
 	int getReceivedData();
@@ -28,6 +21,5 @@ namespace GameCenterKore {
 	const char* getLocalParticipantId();
 	const char* getOpponentParticipantId();
 	void leaveRoom();
-    bool getGameDisconnected();
-    bool getPlaySignedIn();
+	bool getGameDisconnected();
 }
