@@ -13,3 +13,7 @@ gamecenter.GameCenter.reportScore("best_score", score);
 gamecenter.GameCenter.showLeaderboard("best_score");
 gamecenter.GameCenter.reportAchievement("my_achievement", percent);
 ```
+
+## Android
+- Initialization code is not yet present
+- Install play services, google repository and google support repository from SDK manager
