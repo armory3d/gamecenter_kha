@@ -1,0 +1,109 @@
+apply plugin: 'com.android.model.application'
+model {
+    android {
+        compileSdkVersion = 22
+        buildToolsVersion = "22.0.1"
+
+        defaultConfig.with {
+            applicationId = "com.luboslenco.androidapp"
+            minSdkVersion.apiLevel = 15
+            targetSdkVersion.apiLevel = 22
+            versionCode = 2
+            versionName = "1.0"
+        }
+    }
+    android.ndk {
+        moduleName = "kore"
+
+        cppFlags += "-fexceptions"
+        cppFlags += "-frtti"
+        cppFlags += "-DSYS_ANDROID"
+        CFlags += "-DSYS_ANDROID"
+        cppFlags += "-DKORE_MULTITHREADED_AUDIO"
+        CFlags += "-DKORE_MULTITHREADED_AUDIO"
+        cppFlags += "-DANDROID"
+        CFlags += "-DANDROID"
+        cppFlags += "-D_ANDROID"
+        CFlags += "-D_ANDROID"
+        cppFlags += "-DHX_ANDROID"
+        CFlags += "-DHX_ANDROID"
+        cppFlags += "-DHXCPP_API_LEVEL=321"
+        CFlags += "-DHXCPP_API_LEVEL=321"
+        cppFlags += "-DSTATIC_LINK"
+        CFlags += "-DSTATIC_LINK"
+        cppFlags += "-DPCRE_STATIC"
+        CFlags += "-DPCRE_STATIC"
+        cppFlags += "-DHXCPP_SET_PROP"
+        CFlags += "-DHXCPP_SET_PROP"
+        cppFlags += "-DHXCPP_VISIT_ALLOCS"
+        CFlags += "-DHXCPP_VISIT_ALLOCS"
+        cppFlags += "-DKORE"
+        CFlags += "-DKORE"
+        cppFlags += "-DROTATE90"
+        CFlags += "-DROTATE90"
+        cppFlags += "-DOPENGL"
+        CFlags += "-DOPENGL"
+        cppFlags += "-DSYS_ANDROID_API=15"
+        CFlags += "-DSYS_ANDROID_API=15"
+        cppFlags += "-DSYS_UNIXOID"
+        CFlags += "-DSYS_UNIXOID"
+        cppFlags += "-I${file("src/main/jni/build/android-native-build/Sources/include")}".toString()
+        CFlags += "-I${file("src/main/jni/build/android-native-build/Sources/include")}".toString()
+        cppFlags += "-I${file("src/main/jni/Kha/Backends/Kore/khacpp/include")}".toString()
+        CFlags += "-I${file("src/main/jni/Kha/Backends/Kore/khacpp/include")}".toString()
+        cppFlags += "-I${file("src/main/jni/Kha/Backends/Kore/khacpp/project/thirdparty/pcre-7.8")}".toString()
+        CFlags += "-I${file("src/main/jni/Kha/Backends/Kore/khacpp/project/thirdparty/pcre-7.8")}".toString()
+        cppFlags += "-I${file("src/main/jni/Kha/Backends/Kore/khacpp/project/libs/nekoapi")}".toString()
+        CFlags += "-I${file("src/main/jni/Kha/Backends/Kore/khacpp/project/libs/nekoapi")}".toString()
+        cppFlags += "-I${file("src/main/jni/Kha/Kore/Sources")}".toString()
+        CFlags += "-I${file("src/main/jni/Kha/Kore/Sources")}".toString()
+        cppFlags += "-I${file("src/main/jni/Kha/Kore/Backends/Android/Sources")}".toString()
+        CFlags += "-I${file("src/main/jni/Kha/Kore/Backends/Android/Sources")}".toString()
+        cppFlags += "-I${file("src/main/jni/Kha/Kore/Backends/OpenGL2/Sources")}".toString()
+        CFlags += "-I${file("src/main/jni/Kha/Kore/Backends/OpenGL2/Sources")}".toString()
+        cppFlags += "-I${file("src/main/jni/Libraries/gamecenter_kha/android/gamecenterkore")}".toString()
+        CFlags += "-I${file("src/main/jni/Libraries/gamecenter_kha/android/gamecenterkore")}".toString()
+
+        ldLibs += ["log", "GLESv2", "OpenMAXAL", "android"]
+        stl = "gnustl_static"
+    }
+    android.buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles += file('proguard-rules.pro')
+        }
+    }
+    android.sources {
+        main {
+            java {
+                source {
+                    srcDir '../../../../Libraries/gamecenter_kha/android/java'
+                    srcDir '../../../../Kha/Kore/Backends/Android/Java-Sources'
+
+                }
+            }
+        }
+    }
+    android.productFlavors {
+        create("arm7") {
+            ndk.abiFilters += "armeabi-v7a"
+        }
+        create("arm8") {
+            ndk.abiFilters += "arm64-v8a"
+        }
+        create("x86-32") {
+            ndk.abiFilters += "x86"
+        }
+        create("all")
+    }
+    android.buildTypes {
+        debug {
+            isJniDebuggable = true
+        }
+    }
+}
+
+dependencies {
+    compile 'com.google.android.gms:play-services:7.8.0'
+    compile project(':BaseGameUtils')
+}
